@@ -8,6 +8,8 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.plugin.java.JavaPlugin
+import java.lang.reflect.Field
+import java.lang.reflect.Modifier
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -103,4 +105,15 @@ fun ItemStack.setSkin(skin: String): ItemStack {
         itemMeta = meta
     }
     return this
+}
+
+/**
+ * Sets the given [field] accessible for manipulations.
+ */
+@Throws(NoSuchFieldException::class, SecurityException::class, IllegalArgumentException::class, IllegalAccessException::class)
+fun Any.setFinalFieldAccessible(field: Field) {
+    field.isAccessible = true
+    val modifiersField = Field::class.java.getDeclaredField("modifiers")
+    modifiersField.isAccessible = true
+    modifiersField.setInt(field, field.modifiers and Modifier.FINAL.inv())
 }

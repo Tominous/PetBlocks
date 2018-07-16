@@ -9,6 +9,7 @@ import com.github.shynixn.petblocks.bukkit.logic.persistence.configuration.Bukki
 import com.github.shynixn.petblocks.bukkit.logic.persistence.entity.BukkitGUIItem
 import com.github.shynixn.petblocks.bukkit.logic.persistence.entity.BukkitItemContainer
 import com.google.inject.Inject
+import org.bukkit.ChatColor
 import org.bukkit.configuration.MemorySection
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
@@ -55,6 +56,23 @@ import kotlin.collections.HashMap
  */
 class ConfigurationServiceImpl @Inject constructor(private val plugin: Plugin, private val guiItemsController: BukkitStaticGUIItems) : ConfigurationService {
     private val cache = HashMap<String, List<GUIItem>>()
+
+    /**
+     * Returns the configuration value from the given [path].
+     */
+    override fun <I> getConfigurationValue(path: String): I {
+        if (!this.plugin.config.contains(path)) {
+            throw RuntimeException("The given item '$path' does not exist in the config.yml!")
+        }
+
+        var data = this.plugin.config.get(path)
+
+        if (data is String) {
+            data = ChatColor.translateAlternateColorCodes('&', data)
+        }
+
+        return data as I
+    }
 
     /**
      * Tries to return a list of [GUIItem] matching the given path from the config.

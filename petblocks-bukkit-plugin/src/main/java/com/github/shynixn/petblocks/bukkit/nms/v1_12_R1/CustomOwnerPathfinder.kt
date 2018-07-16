@@ -1,7 +1,8 @@
-package com.github.shynixn.petblocks.api.business.service
+package com.github.shynixn.petblocks.bukkit.nms.v1_12_R1
 
-import com.github.shynixn.petblocks.api.persistence.entity.GUIItem
-import java.util.*
+import net.minecraft.server.v1_12_R1.EntityInsentient
+import net.minecraft.server.v1_12_R1.EntityLiving
+import net.minecraft.server.v1_12_R1.PathfinderGoal
 
 /**
  * Created by Shynixn 2018.
@@ -30,22 +31,10 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface ConfigurationService {
+class CustomOwnerPathfinder(private val entity: EntityLiving, private val owner: EntityLiving) : PathfinderGoal() {
 
-    /**
-     * Returns the configuration value from the given [path].
-     */
-    fun <I> getConfigurationValue(path: String): I
 
-    /**
-     * Tries to return a [GUIItem] matching the displayName and the lore of the given [item].
-     * Can be called asynchronly.
-     */
-    fun <I> findClickedGUIItem(item: I): Optional<GUIItem>
-
-    /**
-     * Tries to return a list of [GUIItem] matching the given path from the config.
-     * Can be called asynchronly.
-     */
-    fun findGUIItemCollection(path: String): Optional<List<GUIItem>>
+    override fun a(): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }
