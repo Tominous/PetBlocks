@@ -1,9 +1,7 @@
-package com.github.shynixn.petblocks.api.business.service
-
-import com.github.shynixn.petblocks.api.persistence.entity.SoundMeta
+package com.github.shynixn.petblocks.api.persistence.entity
 
 /**
- * Created by Shynixn 2018.
+ * Entity for holding sound meta data.
  * <p>
  * Version 1.2
  * <p>
@@ -29,9 +27,19 @@ import com.github.shynixn.petblocks.api.persistence.entity.SoundMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface PetActionService {
+interface SoundMeta {
     /**
-     * Plays the given sound.
+     * Name of the sound depending on the used version and library.
      */
-    fun playSound(soundMeta: SoundMeta)
+    var name: String
+
+    /**
+     * Volume of the sound being played. Mostly used for block range instead of actual volume.
+     */
+    var volume: Double
+
+    /**
+     * Pitch of the sound being played. Ranges from 0.0 - 2.0.
+     */
+    var pitch: Double
 }

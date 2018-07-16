@@ -47,4 +47,172 @@ interface PetMeta {
      * The axes for the hitbox relocation.
      */
     var hitbox: Vector
+
+
+    /**
+     *     /**
+     * Returns if the petblock is enabled.
+     *
+     * @return enabled
+    */
+    boolean isEnabled();
+
+    /**
+     * Sets the petblock enabled.
+     *
+     * @param enabled enabled
+    */
+    void setEnabled(boolean enabled);
+
+    /**
+     * Returns the age in ticks.
+     *
+     * @return age
+    */
+    long getAge();
+
+    /**
+     * Returns the skin of the pet.
+     *
+     * @return skin
+    */
+    String getSkin();
+
+    /**
+     * Sets the age in ticks.
+     *
+     * @param ticks ticks
+    */
+    void setAge(long ticks);
+
+    /**
+     * Returns the data of the engine.
+     *
+     * @param <T> type of engineContainer type.
+     * @return engine
+    */
+    <T> EngineContainer<T> getEngine();
+
+    /**
+     * Sets the data of the engine.
+     *
+     * @param <T>    type of engineContainer type.
+     * @param engine engine
+    */
+    <T> void setEngine(EngineContainer<T> engine);
+
+    /**
+     * Sets the data of the engine.
+     *
+     * @param <T>       type of engineContainer type.
+     * @param overwrite should the previous settings be overwritten by the engine.
+     * @param engine    engine
+    */
+    <T> void setEngine(EngineContainer<T> engine, boolean overwrite);
+
+    /**
+     * Sets the pet sound enabled.
+     *
+     * @param enabled enabled
+    */
+    void setSoundEnabled(boolean enabled);
+
+    /**
+     * Returns if the pet-sound is enabled.
+     *
+     * @return enabled
+    */
+    boolean isSoundEnabled();
+
+    /**
+     * Returns if the itemStack is unbreakable.
+     *
+     * @return unbreakable
+    */
+    boolean isItemStackUnbreakable();
+
+    /**
+     * Sets the itemStack.
+     *
+     * @param id          id
+     * @param damage      damage
+     * @param skin        skin
+     * @param unbreakable unbreakable
+    */
+    @Deprecated
+    void setSkin(int id, int damage, String skin, boolean unbreakable);
+
+    /**
+     * Sets the itemStack.
+     *
+     * @param name        name
+     * @param damage      damage
+     * @param skin        skin
+     * @param unbreakable unbreakable
+    */
+    void setSkin(String name, int damage, String skin, boolean unbreakable);
+
+    /**
+     * Sets the stored display name of the pet which appears above it's head on respawn.
+     *
+     * @param name name
+    */
+    void setPetDisplayName(String name);
+
+    /**
+     * Returns the stored display name of the pet which appear above it's head on respawn.
+     *
+     * @return name
+    */
+    String getPetDisplayName();
+
+    /**
+     * Returns the particleEffect meta.
+     *
+     * @return meta
+    */
+    ParticleEffectMeta getParticleEffectMeta();
+
+    /**
+     * Returns the meta of the owner.
+     *
+     * @return player
+    */
+    PlayerMeta getPlayerMeta();
+
+    /**
+     * Returns the id of the item.
+     *
+     * @return itemId
+    */
+    int getItemId();
+
+    /**
+     * Returns the material name of the item id.
+     *
+     * @return name
+    */
+    String getItemMaterialName();
+
+    /**
+     * Returns the damage of the item.
+     *
+     * @return itemDamage
+    */
+    int getItemDamage();
+
+    /**
+     * Returns if the item is unbreakable.
+     *
+     * @return unbreakable
+    */
+    boolean isItemUnbreakable();
+
+    /**
+     * Returns the itemStack for the head.
+     *
+     * @return headItemStack
+    */
+    Object getHeadItemStack();
+     */
 }

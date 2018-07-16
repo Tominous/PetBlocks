@@ -1,6 +1,6 @@
-package com.github.shynixn.petblocks.api.business.service
+package com.github.shynixn.petblocks.core.logic.persistence.entity
 
-import com.github.shynixn.petblocks.api.persistence.entity.SoundMeta
+import com.github.shynixn.petblocks.api.persistence.entity.Vector
 
 /**
  * Created by Shynixn 2018.
@@ -29,9 +29,17 @@ import com.github.shynixn.petblocks.api.persistence.entity.SoundMeta
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-interface PetActionService {
+class VectorEntity : Vector {
     /**
-     * Plays the given sound.
+     * Vector size on x coordinate.
      */
-    fun playSound(soundMeta: SoundMeta)
+    override var x: Double = 0.0
+    /**
+     * Vector size on y coordinate.
+     */
+    override var y: Double = 0.0
+    /**
+     * Vector size on z coordinate.
+     */
+    override var z: Double = 0.0
 }

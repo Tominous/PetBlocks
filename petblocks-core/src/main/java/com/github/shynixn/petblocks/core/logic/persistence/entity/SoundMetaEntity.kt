@@ -1,13 +1,15 @@
-package com.github.shynixn.petblocks.api.persistence.entity;
+package com.github.shynixn.petblocks.core.logic.persistence.entity
+
+import com.github.shynixn.petblocks.api.persistence.entity.SoundMeta
 
 /**
- * Metadata about sounds.
+ * Created by Shynixn 2018.
  * <p>
- * Version 1.1
+ * Version 1.2
  * <p>
  * MIT License
  * <p>
- * Copyright (c) 2017 by Shynixn
+ * Copyright (c) 2018 by Shynixn
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,49 +29,19 @@ package com.github.shynixn.petblocks.api.persistence.entity;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public interface SoundMeta extends Persistenceable {
+class SoundMetaEntity : SoundMeta {
     /**
-     * Returns the name of the sound.
-     *
-     * @return name
+     * Name of the sound depending on the used version and library.
      */
-    String getName();
+    override var name: String = ""
 
     /**
-     * Sets the name of the sound.
-     *
-     * @param name name
-     * @return builder
+     * Volume of the sound being played. Mostly used for block range instead of actual volume.
      */
-    SoundMeta setName(String name);
+    override var volume: Double = 1.0
 
     /**
-     * Returns the volume of the sound.
-     *
-     * @return volume
+     * Pitch of the sound being played. Ranges from 0.0 - 2.0.
      */
-    double getVolume();
-
-    /**
-     * Sets the volume of the sound.
-     *
-     * @param volume volume
-     * @return builder
-     */
-    SoundMeta setVolume(double volume);
-
-    /**
-     * Returns the pitch of the sound.
-     *
-     * @return pitch
-     */
-    double getPitch();
-
-    /**
-     * Sets the pitch of the sound.
-     *
-     * @param pitch pitch
-     * @return builder
-     */
-    SoundMeta setPitch(double pitch);
+    override var pitch: Double = 1.0
 }
