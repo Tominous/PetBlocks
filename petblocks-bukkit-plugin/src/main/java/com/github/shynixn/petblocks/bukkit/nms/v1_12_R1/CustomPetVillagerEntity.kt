@@ -1,6 +1,7 @@
 package com.github.shynixn.petblocks.bukkit.nms.v1_12_R1
 
-import com.github.shynixn.petblocks.api.business.service.ConfigurationService
+import com.github.shynixn.petblocks.api.business.service.PetActionService
+import com.github.shynixn.petblocks.api.persistence.entity.PetMeta
 import com.github.shynixn.petblocks.bukkit.logic.business.helper.setFinalFieldAccessible
 import com.google.common.collect.Sets
 import net.minecraft.server.v1_12_R1.*
@@ -8,6 +9,11 @@ import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity
 import org.bukkit.entity.LivingEntity
+import org.bukkit.event.entity.CreatureSpawnEvent
+import org.bukkit.metadata.FixedMetadataValue
+import org.bukkit.plugin.Plugin
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 /**
  * Created by Shynixn 2018.
@@ -37,6 +43,10 @@ import org.bukkit.entity.LivingEntity
  * SOFTWARE.
  */
 class CustomPetVillagerEntity : EntityVillager {
+    private var petActionService: PetActionService? = null
+    private var petMeta: PetMeta? = null
+    private var plugin: Plugin? = null
+
     /**
      * Default constructor for correct entity registration.
      */
@@ -50,11 +60,11 @@ class CustomPetVillagerEntity : EntityVillager {
     /**
      * Villager Constructor.
      */
-    constructor(location: Location, owner: LivingEntity, configurationService: ConfigurationService) : super((location.world as CraftWorld).handle) {
-        val petWalkingSpeed = configurationService.getConfigurationValue<Double>("pet.modifier.walking-speed")
-        val petClimbingHeight = configurationService.getConfigurationValue<Double>("pet.modifier.climbing-height").toFloat()
-
+    constructor(location: Location, owner: LivingEntity, petMeta: PetMeta, plugin: Plugin, petActionService: PetActionService) : super((location.world as CraftWorld).handle) {
+        this.petMeta = petMeta
         this.isSilent = true
+        this.petActionService = petActionService
+        this.plugin = plugin
 
         val bField = PathfinderGoalSelector::class.java.getDeclaredField("b")
         val cField = PathfinderGoalSelector::class.java.getDeclaredField("c")
@@ -68,9 +78,24 @@ class CustomPetVillagerEntity : EntityVillager {
 
         this.goalSelector.a(0, PathfinderGoalFloat(this))
         this.goalSelector.a(1, CustomOwnerPathfinder(this, (owner as CraftLivingEntity).handle))
+    }
 
-        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).value = 0.30000001192092896 * petWalkingSpeed
-        this.P = petClimbingHeight
+    /**
+     * Lets this entity respawn at the given [location].
+     */
+    fun respawn(location: Location) {
+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).value = 0.30000001192092896 * petMeta!!.walkingSpeed
+        this.P = petMeta!!.climbingHeight.toFloat()
+
+        this.setPositionRotation(location.x, location.y, location.z, location.yaw, location.pitch)
+        val world = (location.world as CraftWorld).handle
+        world.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM)
+
+        val livingEntity = (getBukkitEntity() as LivingEntity)
+        livingEntity.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 9999999, 1))
+        livingEntity.setMetadata("keep", FixedMetadataValue(plugin, true))
+        livingEntity.isCustomNameVisible = false
+        livingEntity.customName = "PetBlockIdentifier"
     }
 
     /**
@@ -78,7 +103,19 @@ class CustomPetVillagerEntity : EntityVillager {
      */
     override fun a(blockposition: BlockPosition, block: Block) {
         super.a(blockposition, block)
+
+        petActionService!!.playSound(this.petMeta!!.movementSound)
     }
 
+    /**
+     * Override implementations.
+     */
+    override fun recalcPosition() {
+        val axisAssignment = this.boundingBox
+        val hitbox = petMeta!!.hitbox
 
+        this.locX = (axisAssignment.a + axisAssignment.d) / 2.0 + hitbox.x
+        this.locY = axisAssignment.b + hitbox.y
+        this.locZ = (axisAssignment.c + axisAssignment.f) / 2.0 + hitbox.z
+    }
 }
