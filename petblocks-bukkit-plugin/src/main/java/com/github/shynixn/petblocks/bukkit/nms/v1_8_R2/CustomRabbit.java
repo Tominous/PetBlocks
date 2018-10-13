@@ -56,7 +56,7 @@ public final class CustomRabbit extends EntityRabbit implements PetBlockPartEnti
     protected String cm() {
         try {
             if (this.petBlock == null) {
-                return this.cm();
+                return super.cm();
             }
 
             this.playedMovingSound = PetBlockHelper.executeMovingSound(this.petBlock, this.playedMovingSound);

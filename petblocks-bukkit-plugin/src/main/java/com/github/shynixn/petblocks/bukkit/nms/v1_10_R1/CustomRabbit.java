@@ -56,7 +56,7 @@ public final class CustomRabbit extends EntityRabbit implements PetBlockPartEnti
     protected SoundEffect df() {
         try {
             if (this.petBlock == null) {
-                return this.df();
+                return super.df();
             }
 
             this.playedMovingSound = PetBlockHelper.executeMovingSound(this.petBlock, this.playedMovingSound);
