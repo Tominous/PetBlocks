@@ -2,14 +2,17 @@ package com.github.shynixn.petblocks.sponge
 
 import com.github.shynixn.petblocks.api.PetBlocksApi
 import com.github.shynixn.petblocks.api.business.controller.PetBlockController
-import com.github.shynixn.petblocks.api.business.proxy.PluginProxy
 import com.github.shynixn.petblocks.api.business.enumeration.ChatColor
+import com.github.shynixn.petblocks.api.business.proxy.PluginProxy
 import com.github.shynixn.petblocks.api.business.service.DependencyService
 import com.github.shynixn.petblocks.api.business.service.EntityService
 import com.github.shynixn.petblocks.api.business.service.UpdateCheckService
 import com.github.shynixn.petblocks.api.persistence.controller.PetMetaController
 import com.github.shynixn.petblocks.core.logic.business.helper.ReflectionUtils
-import com.github.shynixn.petblocks.sponge.logic.business.helper.*
+import com.github.shynixn.petblocks.sponge.logic.business.helper.GoogleGuiceBinder
+import com.github.shynixn.petblocks.sponge.logic.business.helper.resolve
+import com.github.shynixn.petblocks.sponge.logic.business.helper.sendConsoleMessage
+import com.github.shynixn.petblocks.sponge.logic.business.helper.unloadPlugin
 import com.github.shynixn.petblocks.sponge.logic.business.listener.CarryPetListener
 import com.github.shynixn.petblocks.sponge.logic.business.listener.FeedingPetListener
 import com.github.shynixn.petblocks.sponge.logic.business.listener.InventoryListener
@@ -18,7 +21,7 @@ import com.github.shynixn.petblocks.sponge.nms.NMSRegistry
 import com.github.shynixn.petblocks.sponge.nms.VersionSupport
 import com.google.inject.Inject
 import com.google.inject.Injector
-import org.bstats.sponge.Metrics
+import org.bstats.sponge.Metrics2
 import org.slf4j.Logger
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.event.Listener
@@ -76,7 +79,7 @@ class PetBlocksPlugin : PluginProxy {
     private lateinit var pluginContainer: PluginContainer
 
     @Inject
-    private lateinit var metrics: Metrics
+    private lateinit var metrics: Metrics2
 
     @Inject
     private lateinit var logger: Logger
@@ -102,12 +105,13 @@ class PetBlocksPlugin : PluginProxy {
         Config.reload()
         childInjector = injector.createChildInjector(guice)
 
-        metrics.addCustomChart(Metrics.SimplePie("storage", {
+        metrics.addCustomChart(Metrics2.SimplePie("storage") {
             if (Config.getData<Boolean>("sql.enabled")!!) {
                 "MySQL"
+            } else {
+                "SQLite"
             }
-            "SQLite"
-        }))
+        })
 
         // Register Listeners
         Sponge.getEventManager().registerListeners(pluginContainer, resolve<InventoryListener>())
