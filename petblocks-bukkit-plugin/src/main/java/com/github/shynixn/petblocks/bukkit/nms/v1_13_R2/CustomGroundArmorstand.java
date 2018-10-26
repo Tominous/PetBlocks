@@ -42,6 +42,28 @@ final class CustomGroundArmorstand extends EntityArmorStand implements PetBlock 
 
     private Vector bumper;
 
+    private static final Field[] axisAlignmentFields = new Field[5];
+
+    static {
+        try {
+            axisAlignmentFields[0] = AxisAlignedBB.class.getDeclaredField("minX");
+            axisAlignmentFields[1] = AxisAlignedBB.class.getDeclaredField("minY");
+            axisAlignmentFields[2] = AxisAlignedBB.class.getDeclaredField("minZ");
+            axisAlignmentFields[3] = AxisAlignedBB.class.getDeclaredField("maxX");
+            axisAlignmentFields[4] = AxisAlignedBB.class.getDeclaredField("maxZ");
+        } catch (final NoSuchFieldException ex) {
+            try {
+                axisAlignmentFields[0] = AxisAlignedBB.class.getDeclaredField("a");
+                axisAlignmentFields[1] = AxisAlignedBB.class.getDeclaredField("b");
+                axisAlignmentFields[2] = AxisAlignedBB.class.getDeclaredField("c");
+                axisAlignmentFields[3] = AxisAlignedBB.class.getDeclaredField("d");
+                axisAlignmentFields[4] = AxisAlignedBB.class.getDeclaredField("f");
+            } catch (final NoSuchFieldException e1) {
+                throw new RuntimeException("Fields could not get located.", e1);
+            }
+        }
+    }
+
     public CustomGroundArmorstand(World world) {
         super(world);
     }
@@ -96,9 +118,21 @@ final class CustomGroundArmorstand extends EntityArmorStand implements PetBlock 
     private void recalculatePosition() {
         if (this.hasHumanPassenger() != null) {
             final AxisAlignedBB localAxisAlignedBB = this.getBoundingBox();
-            this.locX = ((localAxisAlignedBB.a + localAxisAlignedBB.d) / 2.0D);
-            this.locZ = ((localAxisAlignedBB.c + localAxisAlignedBB.f) / 2.0D);
-            this.locY = (localAxisAlignedBB.b + Config.INSTANCE.getHitBoxYAxeModification());
+
+            try {
+                final double minXA = axisAlignmentFields[0].getDouble(localAxisAlignedBB);
+                final double minXB = axisAlignmentFields[1].getDouble(localAxisAlignedBB);
+                final double minXC = axisAlignmentFields[2].getDouble(localAxisAlignedBB);
+                final double maxXD = axisAlignmentFields[3].getDouble(localAxisAlignedBB);
+                final double maxXF = axisAlignmentFields[4].getDouble(localAxisAlignedBB);
+
+                this.locX = ((minXA + maxXD) / 2.0D);
+                this.locZ = ((minXC + maxXF) / 2.0D);
+                this.locY = (minXB + Config.INSTANCE.getHitBoxYAxeModification());
+            } catch (final IllegalAccessException e1) {
+                throw new RuntimeException(e1);
+            }
+
             this.isGroundRiding = true;
         }
     }
