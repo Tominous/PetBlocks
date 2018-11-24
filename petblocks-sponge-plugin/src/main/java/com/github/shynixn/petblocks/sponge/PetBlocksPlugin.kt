@@ -21,7 +21,7 @@ import com.github.shynixn.petblocks.sponge.nms.NMSRegistry
 import com.github.shynixn.petblocks.sponge.nms.VersionSupport
 import com.google.inject.Inject
 import com.google.inject.Injector
-import org.bstats.sponge.Metrics2
+import org.bstats.sponge.Metrics
 import org.slf4j.Logger
 import org.spongepowered.api.Sponge
 import org.spongepowered.api.event.Listener
@@ -79,7 +79,7 @@ class PetBlocksPlugin : PluginProxy {
     private lateinit var pluginContainer: PluginContainer
 
     @Inject
-    private lateinit var metrics: Metrics2
+    private lateinit var metrics: Metrics
 
     @Inject
     private lateinit var logger: Logger
@@ -105,7 +105,7 @@ class PetBlocksPlugin : PluginProxy {
         Config.reload()
         childInjector = injector.createChildInjector(guice)
 
-        metrics.addCustomChart(Metrics2.SimplePie("storage") {
+        metrics.addCustomChart(Metrics.SimplePie("storage") {
             if (Config.getData<Boolean>("sql.enabled")!!) {
                 "MySQL"
             } else {
